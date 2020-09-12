@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CreateNewMemeViewController.swift
 //  MemeMe
 //
 //  Created by Roy Fuller on 9/4/20.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class CreateNewMemeViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
 
     // MARK: Outlets
     
@@ -20,6 +20,11 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     @IBOutlet weak var bottomTextField: UITextField!
     @IBOutlet weak var toolBar: UIToolbar!
     
+    // MARK: Parent ViewController References
+    
+    var memeTableViewController: UITableViewController!
+    var memeCollectionViewController: UICollectionViewController!
+    
     // MARK: Text Field Attributes
     
     let memeTextAttributes: [NSAttributedString.Key: Any] = [
@@ -28,15 +33,6 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         NSAttributedString.Key.font: UIFont(name: "HelveticaNeue-CondensedBlack", size: 40)!,
         NSAttributedString.Key.strokeWidth: -3.0
     ]
-    
-    // MARK: Meme Representation
-    
-    struct Meme {
-        var topText: String
-        var bottomText: String
-        var originalImage: UIImage
-        var memeImage: UIImage
-    }
     
     // MARK: Lifecycle
     
@@ -67,7 +63,13 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
     // MARK: Meme Generating/Saving Methods
     
     func save(memeImage: UIImage) {
-        let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imagePickerView.image!, memeImage: memeImage)
+        // Create the meme
+        let meme = Memes.Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imagePickerView.image!, memeImage: memeImage)
+        
+        // Add it to the memes array in the Application Delegate
+        let object = UIApplication.shared.delegate
+        let appDelegate = object as! AppDelegate
+        appDelegate.memes.append(meme)
     }
     
     func generateMemedImage() -> UIImage {
@@ -172,6 +174,15 @@ class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavig
         activityViewController.completionWithItemsHandler = { (_, completed, _, _) in
             if(completed) {
                 self.save(memeImage: memeImage)
+                
+                // Reload the meme data for the meme table/collection view
+                // controllers to enable display of the latest shared meme
+                if self.memeTableViewController != nil {
+                    self.memeTableViewController.viewWillAppear(false)
+                } else if self.memeCollectionViewController != nil {
+                    self.memeCollectionViewController.viewWillAppear(false)
+                }
+                
                 self.dismiss(animated: true, completion: nil)
             } else {
                 self.dismiss(animated: true, completion: nil)
