@@ -8,13 +8,9 @@
 
 import UIKit
 
-class Memes {
-    // MARK: Meme Representation
-    
-    struct Meme {
+struct Meme {
         var topText: String
         var bottomText: String
         var originalImage: UIImage
         var memeImage: UIImage
-    }
 }

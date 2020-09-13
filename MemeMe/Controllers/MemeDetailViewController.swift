@@ -12,7 +12,7 @@ class MemeDetailViewController: UIViewController {
     
     // MARK: Properties
     
-    var meme: Memes.Meme!
+    var meme: Meme!
     
     // MARK: Outlets
     

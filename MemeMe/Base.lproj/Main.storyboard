@@ -170,7 +170,7 @@ CQ
                     <navigationItem key="navigationItem" id="VsQ-gx-Qfi">
                         <barButtonItem key="rightBarButtonItem" image="plus" catalog="system" id="34C-mR-s4q" userLabel="Add">
                             <connections>
-                                <segue destination="BYZ-38-t0r" kind="presentation" modalPresentationStyle="fullScreen" id="NB6-hI-R3D"/>
+                                <segue destination="BYZ-38-t0r" kind="presentation" identifier="createNewMeme" modalPresentationStyle="fullScreen" id="NB6-hI-R3D"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -317,7 +317,7 @@ CQ
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="huh-CF-VWO"/>
+        <segue reference="NB6-hI-R3D"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="camera.fill" catalog="system" width="128" height="96"/>

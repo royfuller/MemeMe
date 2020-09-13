@@ -46,11 +46,9 @@ class CreateNewMemeViewController: UIViewController, UIImagePickerControllerDele
         super.viewWillAppear(animated)
         
         subscribeToKeyboardNotifications()
+        initTextField(topTextField)
+        initTextField(bottomTextField)
         
-        topTextField.defaultTextAttributes = memeTextAttributes
-        topTextField.textAlignment = NSTextAlignment.center
-        bottomTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.textAlignment = NSTextAlignment.center
         cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
         share.isEnabled = imagePickerView.image != nil
     }
@@ -60,16 +58,24 @@ class CreateNewMemeViewController: UIViewController, UIImagePickerControllerDele
         unsubscribeFromKeyboardNotifications()
     }
     
+    // MARK: Text Field Utility Method
+    
+    func initTextField(_ textField: UITextField) {
+        textField.defaultTextAttributes = memeTextAttributes
+        textField.textAlignment = NSTextAlignment.center
+    }
+    
     // MARK: Meme Generating/Saving Methods
     
     func save(memeImage: UIImage) {
         // Create the meme
-        let meme = Memes.Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imagePickerView.image!, memeImage: memeImage)
+        let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imagePickerView.image!, memeImage: memeImage)
         
         // Add it to the memes array in the Application Delegate
-        let object = UIApplication.shared.delegate
-        let appDelegate = object as! AppDelegate
-        appDelegate.memes.append(meme)
+//        let object = UIApplication.shared.delegate
+//        let appDelegate = object as! AppDelegate
+//        appDelegate.memes.append(meme)
+        MemesManager.shared.addMeme(meme)
     }
     
     func generateMemedImage() -> UIImage {
@@ -193,10 +199,6 @@ class CreateNewMemeViewController: UIViewController, UIImagePickerControllerDele
     }
     
     @IBAction func cancel(_ sender: Any) {
-        imagePickerView.image = nil
-        topTextField.text = "TOP"
-        bottomTextField.text = "BOTTOM"
-        share.isEnabled = false
+        dismiss(animated: true, completion: nil)
     }
 }
-

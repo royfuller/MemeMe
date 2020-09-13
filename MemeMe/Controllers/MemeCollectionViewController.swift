@@ -13,19 +13,11 @@ class MemeCollectionViewController: UICollectionViewController {
     // MARK: Outlets
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    // MARK: Properties
-    
-    var memes: [Memes.Meme] {
-        let object = UIApplication.shared.delegate
-        let appDelegate = object as! AppDelegate
-        return appDelegate.memes
-    }
-    
     // MARK: Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Sent Memes"
+        self.navigationItem.title = MemeConstants.sentMemesTitle
         
         let space:CGFloat = 3.0
         let dimension = (view.frame.size.width - (2 * space)) / 3.0
@@ -43,12 +35,12 @@ class MemeCollectionViewController: UICollectionViewController {
     // MARK: Collection View Methods
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.memes.count
+        return MemesManager.shared.getMemes().count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MemeCollectionViewCell", for: indexPath) as! MemeCollectionViewCell
-        let meme = self.memes[(indexPath as NSIndexPath).row]
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MemeConstants.memeCollectionViewCell, for: indexPath) as! MemeCollectionViewCell
+        let meme = MemesManager.shared.getMemes()[(indexPath as NSIndexPath).row]
 
         cell.memeImageView.image = meme.memeImage
 
@@ -56,15 +48,15 @@ class MemeCollectionViewController: UICollectionViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath:IndexPath) {
-        let detailController = self.storyboard!.instantiateViewController(withIdentifier: "MemeDetailViewController") as! MemeDetailViewController
-        detailController.meme = self.memes[(indexPath as NSIndexPath).row]
+        let detailController = self.storyboard!.instantiateViewController(withIdentifier: MemeConstants.memeDetailViewController) as! MemeDetailViewController
+        detailController.meme = MemesManager.shared.getMemes()[(indexPath as NSIndexPath).row]
         self.navigationController!.pushViewController(detailController, animated: true)
     }
     
     // MARK: Segue Preparation
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "createNewMeme" {
+        if segue.identifier == MemeConstants.createNewMemeSegueIdentifier {
             let controller = segue.destination as! CreateNewMemeViewController
             controller.memeCollectionViewController = self
         }
